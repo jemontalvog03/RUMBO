@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rumbo -- Encuentra tu carrera ideal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /*
+    Esta app NO depende de ningún framework CSS externo (ya no usa el CDN de
+    Tailwind). Todo el estilo vive en este mismo archivo, así que funciona
+    igual con o sin conexión a internet. Solo las fuentes de Google Fonts
+    de arriba son opcionales: si no cargan, el navegador usa una fuente
+    del sistema como respaldo (ver font-family más abajo) y la app se ve
+    y funciona igual.
+  */
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background: #F7F5FF; font-family: 'Inter', system-ui, sans-serif; color: #1B1533; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; }
+
+  :root{
+    --paper:#F7F5FF; --ink:#1B1533; --inkmuted:#5B527A;
+    --primary:#6C4CFF; --primary-dark:#4E31E0; --primary-light:#EDE9FF;
+    --bloom:#FF6F91; --card:#FFFFFF;
+  }
+
+  /* ---- mini utility layer (reemplaza Tailwind) ---- */
+  .min-h-screen{min-height:100vh;}
+  .max-w-2xl{max-width:42rem;} .max-w-xl{max-width:36rem;} .max-w-lg{max-width:32rem;}
+  .mx-auto{margin-left:auto;margin-right:auto;}
+  .px-5{padding-left:1.25rem;padding-right:1.25rem;}
+  .py-10{padding-top:2.5rem;padding-bottom:2.5rem;}
+  .p-4{padding:1rem;} .p-6{padding:1.5rem;}
+  .px-3{padding-left:.75rem;padding-right:.75rem;} .px-4{padding-left:1rem;padding-right:1rem;} .px-6{padding-left:1.5rem;padding-right:1.5rem;} .px-1{padding-left:.25rem;padding-right:.25rem;}
+  .py-1{padding-top:.25rem;padding-bottom:.25rem;} .py-1\.5{padding-top:.375rem;padding-bottom:.375rem;} .py-3{padding-top:.75rem;padding-bottom:.75rem;} .py-4{padding-top:1rem;padding-bottom:1rem;} .py-16{padding-top:4rem;padding-bottom:4rem;}
+  .pt-0\.5{padding-top:.125rem;} .pt-2{padding-top:.5rem;}
+  .mb-1\.5{margin-bottom:.375rem;} .mb-2{margin-bottom:.5rem;} .mb-3{margin-bottom:.75rem;} .mb-4{margin-bottom:1rem;} .mb-6{margin-bottom:1.5rem;} .mb-8{margin-bottom:2rem;} .mb-10{margin-bottom:2.5rem;}
+  .mt-1{margin-top:.25rem;} .mt-1\.5{margin-top:.375rem;} .mt-4{margin-top:1rem;} .mt-6{margin-top:1.5rem;} .mt-10{margin-top:2.5rem;}
+  .flex{display:flex;} .flex-1{flex:1 1 0%;} .flex-col{flex-direction:column;} .flex-wrap{flex-wrap:wrap;} .shrink-0{flex-shrink:0;}
+  .items-center{align-items:center;} .items-start{align-items:flex-start;}
+  .justify-center{justify-content:center;} .justify-between{justify-content:space-between;}
+  .gap-2{gap:.5rem;} .gap-3{gap:.75rem;} .gap-4{gap:1rem;}
+  .grid{display:grid;} .grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr));} .grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .space-y-3>*+*{margin-top:.75rem;} .space-y-4>*+*{margin-top:1rem;} .space-y-5>*+*{margin-top:1.25rem;} .space-y-6>*+*{margin-top:1.5rem;}
+  .w-full{width:100%;} .w-7{width:1.75rem;} .h-7{height:1.75rem;} .h-2{height:.5rem;} .h-full{height:100%;}
+  .min-h-\[360px\]{min-height:360px;}
+  .rounded-full{border-radius:9999px;} .rounded-xl{border-radius:.75rem;} .rounded-2xl{border-radius:1rem;} .rounded-3xl{border-radius:1.5rem;}
+  .border{border-width:1px;border-style:solid;} .border-2{border-width:2px;border-style:solid;}
+  .border-gray-200{border-color:#e5e7eb;} .border-primary{border-color:var(--primary);}
+  .shadow-sm{box-shadow:0 1px 3px rgba(27,21,51,.08);} .shadow-md{box-shadow:0 8px 20px -8px rgba(27,21,51,.18);} .shadow-lg{box-shadow:0 16px 36px -14px rgba(27,21,51,.22);}
+  .overflow-hidden{overflow:hidden;}
+  .bg-card{background:var(--card);} .bg-paper{background:var(--paper);} .bg-ink{background:var(--ink);} .bg-primary-light{background:var(--primary-light);}
+  .bg-gradient-to-r{background-image:linear-gradient(to right, var(--from-c, var(--primary)), var(--to-c, var(--bloom)));}
+  .from-primary{--from-c:var(--primary);} .to-bloom{--to-c:var(--bloom);}
+  .text-white{color:#fff;} .text-ink{color:var(--ink);} .text-inkmuted{color:var(--inkmuted);} .text-primary{color:var(--primary);} .text-bloom{color:var(--bloom);}
+  .text-xs{font-size:.75rem;} .text-sm{font-size:.875rem;} .text-base{font-size:1rem;} .text-lg{font-size:1.125rem;}
+  .text-xl{font-size:1.25rem;} .text-2xl{font-size:1.5rem;} .text-3xl{font-size:1.875rem;} .text-4xl{font-size:2.25rem;}
+  .font-medium{font-weight:500;} .font-semibold{font-weight:600;}
+  .leading-tight{line-height:1.2;} .leading-snug{line-height:1.35;} .leading-relaxed{line-height:1.65;}
+  .tracking-tight{letter-spacing:-.02em;} .tracking-wide{letter-spacing:.04em;} .uppercase{text-transform:uppercase;}
+  .text-center{text-align:center;} .text-left{text-align:left;}
+  .block{display:block;}
+  .no-underline{text-decoration:none;}
+  .transition-colors{transition:background-color .15s ease,color .15s ease,border-color .15s ease;}
+  a, button { font-family: inherit; }
+  input, textarea { font-family: inherit; }
+
+  button:hover.hover\:bg-primary-dark, .hover\:bg-primary-dark:hover{background:var(--primary-dark)!important;}
+  .hover\:border-primary:hover{border-color:var(--primary)!important;}
+  .hover\:text-ink:hover{color:var(--ink)!important;}
+  .focus\:border-primary:focus{border-color:var(--primary)!important;}
+  button:disabled.disabled\:opacity-30{opacity:.3;} .disabled\:cursor-not-allowed:disabled{cursor:not-allowed;}
+  button{cursor:pointer;background:none;border:none;font-size:inherit;color:inherit;}
+
+  @media (min-width:640px){
+    .sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .sm\:flex-row{flex-direction:row;}
+  }
+  @media (min-width:768px){
+    .md\:justify-start{justify-content:flex-start;}
+    .md\:mx-0{margin-left:0;margin-right:0;}
+    .md\:p-8{padding:2rem;}
+    .md\:py-16{padding-top:4rem;padding-bottom:4rem;}
+    .md\:text-left{text-align:left;}
+    .md\:text-3xl{font-size:1.875rem;} .md\:text-4xl{font-size:2.25rem;} .md\:text-5xl{font-size:3rem;}
+    .md\:items-start{align-items:flex-start;}
+  }
+  /* ---- fin mini utility layer ---- */
+
+  .hidden-screen { display: none !important; }
+
+  /* Compass hero animation */
+  #compass-needle {
+    transform-origin: 100px 100px;
+    animation: settle 2.2s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes settle {
+    0%   { transform: rotate(0deg); }
+    55%  { transform: rotate(410deg); }
+    75%  { transform: rotate(370deg); }
+    100% { transform: rotate(388deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #compass-needle { animation: none; transform: rotate(388deg); }
+  }
+
+  .option-btn {
+    transition: border-color .15s ease, background-color .15s ease, transform .1s ease;
+  }
+  .option-btn:hover { border-color: #6C4CFF; background-color: #EDE9FF; }
+  .option-btn:active { transform: scale(0.99); }
+  .option-btn.selected {
+    border-color: #6C4CFF;
+    background-color: #6C4CFF;
+    color: #fff;
+  }
+  .option-btn.selected .opt-letter {
+    background: #fff; color: #6C4CFF;
+  }
+
+  .scale-dot {
+    transition: transform .12s ease, background-color .15s ease, color .15s ease;
+  }
+  .scale-dot:hover { transform: translateY(-2px); }
+  .scale-dot.selected { background-color: #6C4CFF; color: #fff; border-color: #6C4CFF; }
+
+  .question-enter { animation: qfade .35s ease; }
+  @keyframes qfade {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #progress-fill { transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+  .career-card { transition: transform .15s ease, box-shadow .15s ease; }
+  .career-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px -12px rgba(27,21,51,0.25); }
+
+  .spinner {
+    width: 22px; height: 22px; border-radius: 999px;
+    border: 3px solid #EDE9FF; border-top-color: #6C4CFF;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  ::selection { background: #FFB648; color: #1B1533; }
+
+  input:focus, textarea:focus, button:focus-visible, .option-btn:focus-visible, .scale-dot:focus-visible {
+    outline: 2px solid #6C4CFF; outline-offset: 2px;
+  }
+
+  @media print {
+    body { background: #fff !important; }
+    .no-print { display: none !important; }
+    #screen-results { display: block !important; }
+    .career-card { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; }
+    #app > section:not(#screen-results) { display: none !important; }
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="app" class="min-h-screen">
+
+  <!-- ============ SCREEN 1: WELCOME ============ -->
+  <section id="screen-welcome" class="min-h-screen px-5 py-10 md:py-16">
+    <div class="max-w-2xl mx-auto">
+
+      <div class="flex flex-col items-center md:items-start mb-10">
+        <div class="flex items-center gap-2">
+          <svg width="28" height="28" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#6C4CFF" stroke-width="6"/><path d="M50 28 L58 50 L50 72 L42 50 Z" fill="#FF6F91"/></svg>
+          <span class="font-display font-semibold text-lg tracking-tight">Rumbo</span>
+        </div>
+        <span class="text-xs text-inkmuted text-center md:text-left" style="margin-top:2px;">By: Juan Montalvo, Juan Ospina, Karen Buenaventura y Gabriela Davalos -- Curso 10-A, Colegio Antonio Nariño HH Corazonistas</span>
+      </div>
+
+      <div class="text-center md:text-left mb-8">
+        <div class="flex justify-center md:justify-start mb-6">
+          <svg width="130" height="130" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="92" fill="#EDE9FF"/>
+            <circle cx="100" cy="100" r="70" fill="none" stroke="#6C4CFF" stroke-width="2" opacity="0.4"/>
+            <g stroke="#6C4CFF" stroke-width="2" opacity="0.5">
+              <line x1="100" y1="18" x2="100" y2="32"/>
+              <line x1="100" y1="168" x2="100" y2="182"/>
+              <line x1="18" y1="100" x2="32" y2="100"/>
+              <line x1="168" y1="100" x2="182" y2="100"/>
+            </g>
+            <g id="compass-needle">
+              <path d="M100 40 L112 100 L100 100 Z" fill="#FF6F91"/>
+              <path d="M100 160 L88 100 L100 100 Z" fill="#4E31E0"/>
+            </g>
+            <circle cx="100" cy="100" r="7" fill="#1B1533"/>
+          </svg>
+        </div>
+        <h1 class="font-display text-4xl md:text-5xl font-semibold leading-tight text-ink">Encuentra tu rumbo profesional</h1>
+        <p class="mt-4 text-inkmuted text-lg leading-relaxed max-w-lg mx-auto md:mx-0">Un cuestionario corto y adaptado a ti, pensado para estudiantes a punto de graduarse que aún no saben qué estudiar. Sin respuestas correctas ni incorrectas -- solo las tuyas.</p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 mb-10 text-sm">
+        <div class="bg-card rounded-2xl p-4 shadow-sm">
+          <div class="w-7 h-7 rounded-full bg-primary-light text-primary font-display font-semibold flex items-center justify-center mb-2">1</div>
+          <p class="text-inkmuted leading-snug">Cuéntanos de ti</p>
+        </div>
+        <div class="bg-card rounded-2xl p-4 shadow-sm">
+          <div class="w-7 h-7 rounded-full bg-primary-light text-primary font-display font-semibold flex items-center justify-center mb-2">2</div>
+          <p class="text-inkmuted leading-snug">Responde entre 5 y 8 preguntas</p>
+        </div>
+        <div class="bg-card rounded-2xl p-4 shadow-sm">
+          <div class="w-7 h-7 rounded-full bg-primary-light text-primary font-display font-semibold flex items-center justify-center mb-2">3</div>
+          <p class="text-inkmuted leading-snug">Descubre tus carreras afines</p>
+        </div>
+      </div>
+
+      <form id="welcome-form" class="bg-card rounded-3xl shadow-lg p-6 md:p-8 space-y-6">
+
+        <div>
+          <label for="input-name" class="block text-sm font-semibold text-ink mb-1.5">¿Cómo te llamas?</label>
+          <input id="input-name" type="text" required placeholder="Tu nombre" class="w-full rounded-xl border border-gray-200 px-4 py-3 text-base focus:border-primary" />
+        </div>
+
+        <div>
+          <label for="input-hobbies" class="block text-sm font-semibold text-ink mb-1.5">Materias favoritas o hobbies</label>
+          <input id="input-hobbies" type="text" required placeholder="Ej: videojuegos, biología, dibujar, fútbol..." class="w-full rounded-xl border border-gray-200 px-4 py-3 text-base focus:border-primary" />
+        </div>
+
+        <div>
+          <p class="block text-sm font-semibold text-ink mb-2">¿Cómo quieres hacer el cuestionario?</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button type="button" data-mode="demo" class="mode-btn text-left border-2 border-primary bg-primary-light rounded-2xl p-4">
+              <span class="block font-semibold text-ink">Modo Demo gratuito</span>
+              <span class="block text-sm text-inkmuted mt-1">Sin clave API. Usa un motor de preguntas adaptativo integrado.</span>
+            </button>
+            <button type="button" data-mode="api" class="mode-btn text-left border-2 border-gray-200 rounded-2xl p-4">
+              <span class="block font-semibold text-ink">Modo IA en vivo</span>
+              <span class="block text-sm text-inkmuted mt-1">Usa tu propia clave de Anthropic (Claude) u OpenAI.</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="api-config" class="hidden-screen space-y-4 bg-paper rounded-2xl p-4">
+          <div>
+            <p class="text-sm font-semibold text-ink mb-2">Proveedor</p>
+            <div class="flex gap-3">
+              <label class="flex items-center gap-2 text-sm">
+                <input type="radio" name="provider" value="anthropic" checked> Anthropic (Claude)
+              </label>
+              <label class="flex items-center gap-2 text-sm">
+                <input type="radio" name="provider" value="openai"> OpenAI (GPT)
+              </label>
+            </div>
+          </div>
+          <div>
+            <label for="input-apikey" class="block text-sm font-semibold text-ink mb-1.5">Clave API</label>
+            <input id="input-apikey" type="password" placeholder="sk-... o clave de Anthropic" class="w-full rounded-xl border border-gray-200 px-4 py-3 text-base focus:border-primary" />
+            <div class="text-xs text-inkmuted mt-1.5" style="line-height:1.5;">
+              <p><strong>¿Qué es esto?</strong> Es la clave privada que te da Anthropic (console.anthropic.com) u OpenAI (platform.openai.com) cuando creas una cuenta de desarrollador en su plataforma. No es tu contraseña de la web de Claude ni de ChatGPT -- es un código distinto, pensado para conectar aplicaciones a la IA, y normalmente tiene un costo asociado según el uso (se cobra por cada pregunta que la IA responde).</p>
+              <p class="mt-1"><strong>¿Cómo se usa aquí?</strong> Este archivo llama directamente a la API desde tu navegador, sin pasar por ningún servidor intermedio nuestro. La clave viaja solo entre tu navegador y Anthropic/OpenAI.</p>
+              <p class="mt-1"><strong>Importante:</strong> "sin servidor intermedio" no significa "invisible". Cualquier persona con acceso a tu computador puede ver la clave abriendo las Herramientas de Desarrollador del navegador (pestaña Red/Network) mientras la app funciona. Por eso este modo es solo para pruebas personales -- nunca compartas este archivo con tu clave ya escrita adentro, ni la uses en un computador público o compartido.</p>
+              <p class="mt-1">Si no tienes una clave o no quieres crear una cuenta de pago, usa el <strong>Modo Demo gratuito</strong>: funciona completo, sin clave y sin costo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="form-error" class="hidden-screen text-sm text-bloom font-medium"></div>
+
+        <button type="submit" class="w-full bg-ink hover:bg-primary-dark transition-colors text-white font-semibold rounded-xl py-4 text-base">
+          Comenzar cuestionario
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-inkmuted mt-6">Hecho para orientar, no para decidir por ti. Tú tienes la última palabra.</p>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: QUIZ ============ -->
+  <section id="screen-quiz" class="hidden-screen min-h-screen px-5 py-10 md:py-16">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center gap-2 mb-8">
+        <svg width="24" height="24" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#6C4CFF" stroke-width="6"/><path d="M50 28 L58 50 L50 72 L42 50 Z" fill="#FF6F91"/></svg>
+        <span class="font-display font-semibold tracking-tight">Rumbo</span>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span id="progress-label" class="text-sm font-medium text-inkmuted">Analizando tus intereses...</span>
+          <span id="progress-percent" class="text-sm font-semibold text-primary">0%</span>
+        </div>
+        <div class="w-full h-2 bg-primary-light rounded-full overflow-hidden">
+          <div id="progress-fill" class="h-full bg-gradient-to-r from-primary to-bloom rounded-full" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div id="quiz-card" class="bg-card rounded-3xl shadow-lg p-6 md:p-8 min-h-[360px] flex flex-col">
+        <div id="quiz-loading" class="hidden-screen flex-1 flex flex-col items-center justify-center gap-4 py-16">
+          <div class="spinner"></div>
+          <p id="quiz-loading-text" class="text-inkmuted text-sm">Pensando en tu siguiente pregunta...</p>
+        </div>
+
+        <div id="quiz-content" class="question-enter flex-1 flex flex-col">
+          <p id="question-index-label" class="text-xs font-semibold text-primary uppercase tracking-wide mb-3">Pregunta 1</p>
+          <h2 id="question-text" class="font-display text-2xl md:text-3xl font-medium leading-snug text-ink mb-6"></h2>
+          <div id="question-options" class="space-y-3 flex-1"></div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center mt-6">
+        <button id="btn-quiz-back" type="button" class="text-inkmuted text-sm font-medium hover:text-ink no-print">← Salir</button>
+        <button id="btn-quiz-next" type="button" disabled class="bg-ink disabled:opacity-30 disabled:cursor-not-allowed hover:bg-primary-dark transition-colors text-white font-semibold rounded-xl px-6 py-3 text-sm">
+          Siguiente
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: RESULTS ============ -->
+  <section id="screen-results" class="hidden-screen min-h-screen px-5 py-10 md:py-16">
+    <div class="max-w-2xl mx-auto">
+      <div class="flex items-center gap-2 mb-8 no-print">
+        <svg width="24" height="24" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#6C4CFF" stroke-width="6"/><path d="M50 28 L58 50 L50 72 L42 50 Z" fill="#FF6F91"/></svg>
+        <span class="font-display font-semibold tracking-tight">Rumbo</span>
+      </div>
+
+      <div class="text-center mb-10">
+        <p class="text-sm font-semibold text-primary mb-2">Tu perfil vocacional</p>
+        <h1 id="result-profile-title" class="font-display text-3xl md:text-4xl font-semibold text-ink mb-4"></h1>
+        <p id="result-profile-summary" class="text-inkmuted leading-relaxed max-w-lg mx-auto"></p>
+      </div>
+
+      <div id="result-careers" class="space-y-5"></div>
+
+      <div class="flex flex-col sm:flex-row gap-3 mt-10 no-print">
+        <button id="btn-print" type="button" class="flex-1 bg-ink hover:bg-primary-dark transition-colors text-white font-semibold rounded-xl py-4 text-sm">
+          Descargar / Imprimir informe
+        </button>
+        <button id="btn-restart" type="button" class="flex-1 border-2 border-gray-200 hover:border-primary transition-colors text-ink font-semibold rounded-xl py-4 text-sm">
+          Reiniciar cuestionario
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  /* ===================== DATA ===================== */
+
+  const TRAITS = ['analitico','creativo','social','tecnico','liderazgo','practico','estabilidad','ayuda','autonomia'];
+
+  const traitLabels = {
+    analitico: 'tu pensamiento analítico',
+    creativo: 'tu lado creativo',
+    social: 'tu facilidad para conectar con otras personas',
+    tecnico: 'tu afinidad con la tecnología',
+    liderazgo: 'tu capacidad de liderazgo',
+    practico: 'tu enfoque práctico',
+    estabilidad: 'tu búsqueda de estabilidad',
+    ayuda: 'tu motivación por ayudar a otros',
+    autonomia: 'tu gusto por la autonomía'
+  };
+
+  const archetypeNames = {
+    'analitico,creativo': 'Perfil Creador-Analítico',
+    'analitico,tecnico': 'Perfil Constructor Digital',
+    'ayuda,social': 'Perfil Conector Social',
+    'creativo,social': 'Perfil Comunicador Creativo',
+    'liderazgo,practico': 'Perfil Líder Estratégico',
+    'liderazgo,social': 'Perfil Líder Social',
+    'analitico,estabilidad': 'Perfil Estratega Analítico',
+    'creativo,tecnico': 'Perfil Innovador Digital',
+    'ayuda,liderazgo': 'Perfil Guía Comunitario',
+    'practico,tecnico': 'Perfil Ingeniero Práctico',
+    'autonomia,creativo': 'Perfil Creador Independiente',
+    'ayuda,analitico': 'Perfil Investigador Empático'
+  };
+
+  const Q_BRANCH_SELECT = {
+    id: 'branch', type: 'mcq',
+    text: 'Imagina un sábado libre, sin tareas ni obligaciones. ¿Qué te daría más curiosidad hacer?',
+    options: [
+      { text: 'Resolver un rompecabezas lógico o entender cómo funciona algo por dentro', branch: 'ciencias', traits: { analitico: 2, tecnico: 1 } },
+      { text: 'Crear algo visual: dibujar, diseñar o grabar un video', branch: 'arte', traits: { creativo: 2 } },
+      { text: 'Programar una app o armar un proyecto con tecnología', branch: 'tecnologia', traits: { tecnico: 2, analitico: 1 } },
+      { text: 'Leer sobre sociedad, política o ayudar en una causa comunitaria', branch: 'sociales', traits: { social: 2, ayuda: 1 } },
+      { text: 'Organizar un evento, negociar algo o idear un pequeño negocio', branch: 'negocios', traits: { liderazgo: 2, practico: 1 } }
+    ]
+  };
+
+  const BRANCH_QUESTIONS = {
+    ciencias: [
+      { id:'c1', type:'mcq', text:'En un laboratorio o proyecto de investigación, ¿qué rol tomarías?', options:[
+        { text:'El que diseña el experimento paso a paso', traits:{analitico:3, tecnico:1} },
+        { text:'El que cuida que los datos y resultados sean precisos', traits:{analitico:2, practico:1} },
+        { text:'El que conecta el hallazgo con aplicaciones reales de salud o ambiente', traits:{ayuda:2, analitico:1} },
+        { text:'El que presenta y explica los resultados al equipo', traits:{social:1, liderazgo:1, analitico:1} }
+      ]},
+      { id:'c2', type:'scale', text:'Del 1 al 5, ¿qué tanto disfrutas trabajar con números, fórmulas o datos?', leftLabel:'Nada', rightLabel:'Mucho',
+        weight:(v)=>({ analitico:v*0.5, tecnico:v*0.3 }) },
+      { id:'c3', type:'mcq', text:'¿Qué tema te llama más la atención?', options:[
+        { text:'El cuerpo humano y la salud', traits:{ayuda:2, analitico:1} },
+        { text:'El universo, la física o la ingeniería', traits:{tecnico:2, analitico:2} },
+        { text:'La naturaleza, los animales o el medioambiente', traits:{analitico:1, ayuda:1, practico:1} },
+        { text:'Las matemáticas puras y la lógica', traits:{analitico:3} }
+      ]}
+    ],
+    arte: [
+      { id:'a1', type:'mcq', text:'¿Qué disfrutas más al crear algo?', options:[
+        { text:'Contar una historia visual o narrativa', traits:{creativo:3} },
+        { text:'Diseñar algo que otros van a usar, funcional y bonito', traits:{creativo:2, practico:1} },
+        { text:'Actuar, cantar o expresarme frente a otros', traits:{creativo:2, social:1} },
+        { text:'Mezclar tecnología con arte, como animación digital', traits:{creativo:2, tecnico:1} }
+      ]},
+      { id:'a2', type:'scale', text:'Del 1 al 5, ¿qué tan importante es para ti tener libertad creativa total en tu trabajo?', leftLabel:'Poco', rightLabel:'Mucho',
+        weight:(v)=>({ creativo:v*0.5, autonomia:v*0.2 }) },
+      { id:'a3', type:'mcq', text:'Si expusieras tu trabajo, ¿qué te haría más feliz?', options:[
+        { text:'Que emocione o conmueva a la gente', traits:{creativo:2, social:1} },
+        { text:'Que resuelva un problema de comunicación o de marca', traits:{creativo:1, practico:2} },
+        { text:'Que sea innovador y nunca visto antes', traits:{creativo:3} },
+        { text:'Que se use en la vida real de muchas personas', traits:{creativo:1, tecnico:1, practico:1} }
+      ]}
+    ],
+    tecnologia: [
+      { id:'t1', type:'mcq', text:'¿Qué parte de la tecnología te atrae más?', options:[
+        { text:'Crear software o aplicaciones', traits:{tecnico:3} },
+        { text:'Diseñar cómo se ve y se siente un producto digital', traits:{tecnico:1, creativo:2} },
+        { text:'Analizar datos para tomar mejores decisiones', traits:{tecnico:1, analitico:2} },
+        { text:'Proteger sistemas y resolver fallas de seguridad', traits:{tecnico:2, analitico:1} }
+      ]},
+      { id:'t2', type:'scale', text:'Del 1 al 5, ¿qué tan cómodo te sientes aprendiendo herramientas nuevas por tu cuenta?', leftLabel:'Nada', rightLabel:'Muy cómodo',
+        weight:(v)=>({ tecnico:v*0.5, autonomia:v*0.2 }) },
+      { id:'t3', type:'mcq', text:'¿Qué tipo de proyecto te emocionaría más construir?', options:[
+        { text:'Una app que ayude a resolver un problema cotidiano', traits:{tecnico:2, ayuda:1} },
+        { text:'Un videojuego o una experiencia interactiva', traits:{tecnico:1, creativo:2} },
+        { text:'Un sistema que automatice tareas repetitivas', traits:{tecnico:2, practico:1} },
+        { text:'Una inteligencia artificial o un modelo de datos', traits:{tecnico:2, analitico:2} }
+      ]}
+    ],
+    sociales: [
+      { id:'s1', type:'mcq', text:'¿Qué situación te motivaría a actuar?', options:[
+        { text:'Ver una injusticia y querer defender a alguien', traits:{ayuda:2, social:2} },
+        { text:'Un conflicto entre personas que necesita mediación', traits:{social:3} },
+        { text:'Un problema de la comunidad que nadie resuelve', traits:{ayuda:2, liderazgo:1} },
+        { text:'Entender por qué la gente piensa o actúa distinto', traits:{analitico:1, social:2} }
+      ]},
+      { id:'s2', type:'scale', text:'Del 1 al 5, ¿qué tanto disfrutas escuchar y entender los problemas de otras personas?', leftLabel:'Poco', rightLabel:'Mucho',
+        weight:(v)=>({ ayuda:v*0.5, social:v*0.3 }) },
+      { id:'s3', type:'mcq', text:'¿En qué te gustaría enfocar tu carrera?', options:[
+        { text:'Educación y formación de otros', traits:{ayuda:2, social:1, liderazgo:1} },
+        { text:'Justicia, leyes y derechos', traits:{analitico:1, ayuda:1, liderazgo:1} },
+        { text:'Psicología y bienestar mental', traits:{ayuda:2, social:2} },
+        { text:'Política pública o desarrollo social', traits:{liderazgo:2, social:1, ayuda:1} }
+      ]}
+    ],
+    negocios: [
+      { id:'n1', type:'mcq', text:'En un proyecto grupal escolar, ¿qué rol asumes normalmente?', options:[
+        { text:'El que organiza tareas y plazos', traits:{liderazgo:2, practico:1} },
+        { text:'El que convence y presenta la idea final', traits:{liderazgo:2, social:1} },
+        { text:'El que cuida el presupuesto o los recursos', traits:{analitico:1, practico:2} },
+        { text:'El que negocia cuando hay desacuerdos', traits:{social:2, liderazgo:1} }
+      ]},
+      { id:'n2', type:'scale', text:'Del 1 al 5, ¿qué tan cómodo te sientes tomando riesgos calculados?', leftLabel:'Nada', rightLabel:'Muy cómodo',
+        weight:(v)=>({ liderazgo:v*0.4, practico:v*0.3 }) },
+      { id:'n3', type:'mcq', text:'¿Qué te resulta más atractivo?', options:[
+        { text:'Crear tu propio negocio o marca', traits:{liderazgo:2, creativo:1} },
+        { text:'Ayudar a que una empresa crezca y venda más', traits:{practico:2, liderazgo:1} },
+        { text:'Manejar el dinero, inversiones o finanzas', traits:{analitico:2, practico:1} },
+        { text:'Conectar con clientes y entender lo que necesitan', traits:{social:2, practico:1} }
+      ]}
+    ]
+  };
+
+  const SHARED_ENV = {
+    id:'env', type:'scale', text:'Del 1 al 5: 1 significa que prefieres trabajar solo/a, 5 significa que prefieres trabajar en equipo.',
+    leftLabel:'Solo/a', rightLabel:'En equipo',
+    weight:(v)=>({ social: v*0.4, autonomia:(6-v)*0.3 })
+  };
+
+  const SHARED_VALUES = {
+    id:'values', type:'mcq', text:'¿Qué te importa más al pensar en tu futuro profesional?', options:[
+      { text:'Ayudar directamente a las personas', traits:{ayuda:3} },
+      { text:'Tener estabilidad económica y crecimiento seguro', traits:{estabilidad:3} },
+      { text:'Ser libre de crear e innovar', traits:{creativo:3} },
+      { text:'Liderar equipos y tomar decisiones', traits:{liderazgo:3} }
+    ]
+  };
+
+  const CLOSING_SCALE = {
+    id:'closing', type:'scale', text:'Del 1 al 5, ¿qué tan cómodo te sientes tomando decisiones rápidas bajo presión?',
+    leftLabel:'Nada cómodo', rightLabel:'Muy cómodo',
+    weight:(v)=>({ liderazgo: v*0.3, analitico:(6-v)*0.2 })
+  };
+
+  const CAREERS = {
+    ciencias: [
+      { name:'Medicina', vector:{analitico:5,ayuda:5,practico:3,estabilidad:4,social:2,tecnico:2,creativo:1,liderazgo:2,autonomia:2}, skills:['Pensamiento clínico','Empatía','Precisión bajo presión','Trabajo en equipo'], field:'Hospitales, clínicas, investigación biomédica y salud pública.' },
+      { name:'Biología / Biotecnología', vector:{analitico:5,ayuda:2,practico:3,estabilidad:3,tecnico:3,creativo:2,social:1,liderazgo:1,autonomia:3}, skills:['Método científico','Análisis de datos','Curiosidad investigativa','Rigor experimental'], field:'Laboratorios, industria farmacéutica, conservación ambiental y academia.' },
+      { name:'Ingeniería Ambiental', vector:{analitico:4,ayuda:3,practico:4,tecnico:3,estabilidad:3,social:1,creativo:1,liderazgo:1,autonomia:2}, skills:['Análisis de sistemas','Sostenibilidad','Resolución de problemas','Trabajo de campo'], field:'Consultoría ambiental, sector público y energías renovables.' },
+      { name:'Física / Ingeniería', vector:{analitico:5,tecnico:4,practico:3,estabilidad:3,creativo:2,social:1,ayuda:1,liderazgo:1,autonomia:3}, skills:['Razonamiento matemático','Modelado','Resolución analítica','Precisión'], field:'Industria aeroespacial, energía, investigación y tecnología.' },
+      { name:'Matemáticas Aplicadas / Estadística', vector:{analitico:5,tecnico:3,practico:2,estabilidad:4,creativo:1,social:1,ayuda:1,liderazgo:1,autonomia:3}, skills:['Lógica','Modelado cuantitativo','Programación','Pensamiento abstracto'], field:'Finanzas, ciencia de datos, investigación y seguros.' }
+    ],
+    arte: [
+      { name:'Diseño Gráfico / Digital', vector:{creativo:5,tecnico:2,practico:3,social:2,estabilidad:2,analitico:1,liderazgo:1,ayuda:1,autonomia:3}, skills:['Composición visual','Herramientas de diseño','Storytelling visual','Adaptabilidad'], field:'Agencias creativas, marcas, medios digitales y freelance.' },
+      { name:'Cine y Audiovisuales', vector:{creativo:5,social:2,tecnico:2,practico:2,liderazgo:2,estabilidad:1,analitico:1,ayuda:1,autonomia:3}, skills:['Narrativa','Dirección','Trabajo en equipo creativo','Edición'], field:'Producción audiovisual, streaming, publicidad y medios.' },
+      { name:'Arquitectura', vector:{creativo:4,analitico:3,tecnico:3,practico:3,estabilidad:3,social:1,liderazgo:2,ayuda:1,autonomia:2}, skills:['Diseño espacial','Precisión técnica','Creatividad aplicada','Gestión de proyectos'], field:'Estudios de arquitectura, construcción y urbanismo.' },
+      { name:'Diseño de Moda / Producto', vector:{creativo:5,practico:3,tecnico:1,social:2,liderazgo:1,estabilidad:1,analitico:1,ayuda:1,autonomia:3}, skills:['Tendencias','Diseño de producto','Creatividad comercial','Atención al detalle'], field:'Marcas de moda, diseño industrial, retail y emprendimiento.' },
+      { name:'Artes Escénicas / Música', vector:{creativo:5,social:3,practico:1,estabilidad:1,analitico:1,tecnico:1,liderazgo:1,ayuda:1,autonomia:2}, skills:['Expresión escénica','Disciplina creativa','Trabajo en equipo','Manejo de la atención pública'], field:'Teatro, industria musical, entretenimiento y educación artística.' }
+    ],
+    tecnologia: [
+      { name:'Ingeniería de Software', vector:{tecnico:5,analitico:4,practico:3,estabilidad:4,creativo:2,social:1,liderazgo:1,ayuda:1,autonomia:3}, skills:['Programación','Resolución de problemas','Pensamiento lógico','Trabajo autónomo'], field:'Empresas tech, startups, freelance y cualquier industria digitalizada.' },
+      { name:'Ciencia de Datos / IA', vector:{tecnico:4,analitico:5,practico:2,estabilidad:4,creativo:1,social:1,liderazgo:1,ayuda:1,autonomia:2}, skills:['Estadística','Programación','Modelado predictivo','Curiosidad analítica'], field:'Tecnología, finanzas, salud y cualquier industria basada en datos.' },
+      { name:'Diseño UX/UI', vector:{tecnico:2,creativo:4,analitico:2,social:2,practico:3,estabilidad:2,liderazgo:1,ayuda:1,autonomia:2}, skills:['Empatía con el usuario','Prototipado','Diseño visual','Pensamiento de producto'], field:'Empresas tech, agencias digitales y productos digitales.' },
+      { name:'Ciberseguridad', vector:{tecnico:5,analitico:4,practico:2,estabilidad:4,creativo:1,social:1,liderazgo:1,ayuda:2,autonomia:2}, skills:['Pensamiento adversarial','Redes y sistemas','Atención al detalle','Resolución bajo presión'], field:'Bancos, gobierno, empresas tech y consultoría.' },
+      { name:'Ingeniería Mecatrónica / Robótica', vector:{tecnico:5,analitico:3,practico:3,estabilidad:3,creativo:2,social:1,liderazgo:1,ayuda:1,autonomia:2}, skills:['Diseño de sistemas','Programación de hardware','Resolución práctica','Innovación técnica'], field:'Manufactura, automatización, robótica industrial e investigación.' }
+    ],
+    sociales: [
+      { name:'Psicología', vector:{ayuda:5,social:4,analitico:2,practico:2,estabilidad:2,creativo:1,tecnico:1,liderazgo:1,autonomia:2}, skills:['Escucha activa','Empatía','Análisis del comportamiento','Confidencialidad'], field:'Clínicas, empresas, educación y consulta privada.' },
+      { name:'Derecho', vector:{analitico:4,liderazgo:3,ayuda:2,social:2,practico:2,estabilidad:3,creativo:1,tecnico:1,autonomia:2}, skills:['Argumentación','Pensamiento crítico','Redacción','Ética'], field:'Bufetes, sector público, empresas y organismos internacionales.' },
+      { name:'Educación / Pedagogía', vector:{ayuda:5,social:4,creativo:2,liderazgo:2,practico:2,estabilidad:3,analitico:1,tecnico:1,autonomia:1}, skills:['Comunicación','Paciencia','Planeación didáctica','Liderazgo de grupo'], field:'Colegios, universidades, educación no formal y edtech.' },
+      { name:'Trabajo Social / Desarrollo Comunitario', vector:{ayuda:5,social:4,liderazgo:2,practico:2,estabilidad:1,analitico:1,creativo:1,tecnico:1,autonomia:2}, skills:['Gestión de recursos comunitarios','Empatía','Mediación','Trabajo de campo'], field:'ONGs, gobierno, cooperación internacional y fundaciones.' },
+      { name:'Ciencia Política / Relaciones Internacionales', vector:{analitico:3,liderazgo:3,social:3,ayuda:2,practico:1,estabilidad:2,creativo:1,tecnico:1,autonomia:2}, skills:['Análisis de contextos','Negociación','Comunicación estratégica','Pensamiento global'], field:'Diplomacia, organismos internacionales, sector público y ONGs.' }
+    ],
+    negocios: [
+      { name:'Administración de Empresas', vector:{liderazgo:4,practico:4,analitico:2,estabilidad:3,social:2,creativo:1,tecnico:1,ayuda:1,autonomia:2}, skills:['Gestión de equipos','Toma de decisiones','Visión estratégica','Organización'], field:'Empresas de cualquier sector, consultoría y emprendimiento.' },
+      { name:'Marketing', vector:{creativo:3,social:3,practico:3,liderazgo:2,analitico:1,estabilidad:2,tecnico:1,ayuda:1,autonomia:2}, skills:['Storytelling de marca','Análisis de mercado','Creatividad comercial','Comunicación'], field:'Agencias, marcas, medios digitales y emprendimiento.' },
+      { name:'Finanzas / Economía', vector:{analitico:4,practico:3,estabilidad:4,liderazgo:2,social:1,creativo:1,tecnico:2,ayuda:1,autonomia:2}, skills:['Análisis numérico','Pensamiento estratégico','Gestión de riesgo','Atención al detalle'], field:'Bancos, fondos de inversión, empresas y sector público.' },
+      { name:'Emprendimiento / Negocios Digitales', vector:{liderazgo:4,creativo:3,practico:3,tecnico:2,social:2,estabilidad:1,analitico:1,ayuda:1,autonomia:4}, skills:['Resiliencia','Visión de producto','Ventas','Adaptabilidad'], field:'Startups propias, e-commerce, consultoría e innovación corporativa.' },
+      { name:'Comercio Internacional / Logística', vector:{practico:4,analitico:2,liderazgo:2,estabilidad:3,social:2,creativo:1,tecnico:1,ayuda:1,autonomia:2}, skills:['Negociación','Gestión de cadena de suministro','Visión global','Organización'], field:'Empresas exportadoras, logística, comercio exterior y gobierno.' }
+    ]
+  };
+
+  const analyzingMessages = [
+    'Analizando tus intereses...',
+    'Cruzando tus respuestas...',
+    'Detectando tus fortalezas...',
+    'Explorando tus afinidades creativas y analíticas...',
+    'Comparando patrones en tus respuestas...',
+    'Afinando tu perfil vocacional...',
+    'Casi listo, ajustando los resultados...'
+  ];
+
+  /* ===================== STATE ===================== */
+
+  const state = {
+    mode: 'demo',
+    provider: 'anthropic',
+    apiKey: '',
+    name: '',
+    hobbies: '',
+    sequence: [],
+    currentIndex: 0,
+    branch: null,
+    traitVector: Object.fromEntries(TRAITS.map(t => [t, 0])),
+    history: [],
+    currentSelection: null,
+    aiDone: false,
+    aiResult: null
+  };
+
+  /* ===================== DOM REFS ===================== */
+
+  const $ = id => document.getElementById(id);
+  const screenWelcome = $('screen-welcome');
+  const screenQuiz = $('screen-quiz');
+  const screenResults = $('screen-results');
+
+  const welcomeForm = $('welcome-form');
+  const apiConfig = $('api-config');
+  const formError = $('form-error');
+
+  const progressLabel = $('progress-label');
+  const progressPercent = $('progress-percent');
+  const progressFill = $('progress-fill');
+  const quizLoading = $('quiz-loading');
+  const quizLoadingText = $('quiz-loading-text');
+  const quizContent = $('quiz-content');
+  const questionIndexLabel = $('question-index-label');
+  const questionText = $('question-text');
+  const questionOptions = $('question-options');
+  const btnNext = $('btn-quiz-next');
+
+  const resultProfileTitle = $('result-profile-title');
+  const resultProfileSummary = $('result-profile-summary');
+  const resultCareers = $('result-careers');
+
+  /* ===================== MODE / FORM HANDLING ===================== */
+
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.remove('border-primary', 'bg-primary-light');
+        b.classList.add('border-gray-200');
+      });
+      btn.classList.add('border-primary', 'bg-primary-light');
+      btn.classList.remove('border-gray-200');
+      state.mode = btn.dataset.mode;
+      apiConfig.classList.toggle('hidden-screen', state.mode !== 'api');
+    });
+  });
+
+  welcomeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    formError.classList.add('hidden-screen');
+
+    state.name = $('input-name').value.trim();
+    state.hobbies = $('input-hobbies').value.trim();
+
+    if (!state.name || !state.hobbies) {
+      showFormError('Por favor completa tu nombre y tus materias o hobbies favoritos.');
+      return;
+    }
+
+    if (state.mode === 'api') {
+      state.provider = document.querySelector('input[name="provider"]:checked').value;
+      state.apiKey = $('input-apikey').value.trim();
+      if (!state.apiKey) {
+        showFormError('Ingresa tu clave API o cambia a Modo Demo.');
+        return;
+      }
+    }
+
+    goToQuiz();
+  });
+
+  function showFormError(msg) {
+    formError.textContent = msg;
+    formError.classList.remove('hidden-screen');
+  }
+
+  /* ===================== SCREEN NAV ===================== */
+
+  function showScreen(el) {
+    [screenWelcome, screenQuiz, screenResults].forEach(s => s.classList.add('hidden-screen'));
+    el.classList.remove('hidden-screen');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function goToQuiz() {
+    showScreen(screenQuiz);
+    state.currentIndex = 0;
+    state.history = [];
+    state.traitVector = Object.fromEntries(TRAITS.map(t => [t, 0]));
+    state.branch = null;
+    state.aiDone = false;
+
+    if (state.mode === 'demo') {
+      state.sequence = [Q_BRANCH_SELECT];
+      renderQuestion();
+    } else {
+      setLoading(true, 'Preparando tu primera pregunta...');
+      try {
+        const res = await callAI([]);
+        handleAIResponse(res);
+      } catch (err) {
+        handleAIError(err);
+      }
+    }
+  }
+
+  $('btn-quiz-back').addEventListener('click', () => {
+    if (confirm('¿Seguro que quieres salir? Perderás tu progreso.')) {
+      showScreen(screenWelcome);
+    }
+  });
+
+  /* ===================== DEMO QUIZ RENDERING ===================== */
+
+  function currentQuestion() {
+    return state.sequence[state.currentIndex];
+  }
+
+  function renderQuestion() {
+    const q = currentQuestion();
+    state.currentSelection = null;
+    btnNext.disabled = true;
+
+    const total = state.mode === 'demo' ? 7 : 7; // estimated total for progress display
+    const pct = Math.min(96, Math.round((state.currentIndex / total) * 100));
+    progressFill.style.width = pct + '%';
+    progressPercent.textContent = pct + '%';
+    progressLabel.textContent = analyzingMessages[Math.min(state.currentIndex, analyzingMessages.length - 1)];
+
+    questionIndexLabel.textContent = 'Pregunta ' + (state.currentIndex + 1);
+    questionText.textContent = q.text;
+    questionOptions.innerHTML = '';
+
+    if (q.type === 'mcq') {
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn w-full text-left border-2 border-gray-200 rounded-2xl p-4 flex items-start gap-3';
+        btn.innerHTML = `<span class="opt-letter shrink-0 w-7 h-7 rounded-full bg-primary-light text-primary font-semibold text-sm flex items-center justify-center">${letters[i]}</span><span class="pt-0.5">${opt.text}</span>`;
+        btn.addEventListener('click', () => {
+          questionOptions.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.currentSelection = { optionIndex: i, text: opt.text };
+          btnNext.disabled = false;
+        });
+        questionOptions.appendChild(btn);
+      });
+    } else if (q.type === 'scale') {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex flex-col gap-4 pt-2';
+      const dotsRow = document.createElement('div');
+      dotsRow.className = 'flex justify-between gap-2';
+      for (let v = 1; v <= 5; v++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'scale-dot flex-1 border-2 border-gray-200 rounded-2xl py-4 font-display text-lg font-semibold text-ink';
+        dot.textContent = v;
+        dot.addEventListener('click', () => {
+          dotsRow.querySelectorAll('.scale-dot').forEach(d => d.classList.remove('selected'));
+          dot.classList.add('selected');
+          state.currentSelection = { value: v, text: String(v) };
+          btnNext.disabled = false;
+        });
+        dotsRow.appendChild(dot);
+      }
+      const labelsRow = document.createElement('div');
+      labelsRow.className = 'flex justify-between text-xs text-inkmuted px-1';
+      labelsRow.innerHTML = `<span>${q.leftLabel || ''}</span><span>${q.rightLabel || ''}</span>`;
+      wrap.appendChild(dotsRow);
+      wrap.appendChild(labelsRow);
+      questionOptions.appendChild(wrap);
+    }
+
+    quizContent.classList.remove('question-enter');
+    void quizContent.offsetWidth;
+    quizContent.classList.add('question-enter');
+  }
+
+  function setLoading(isLoading, text) {
+    if (text) quizLoadingText.textContent = text;
+    quizLoading.classList.toggle('hidden-screen', !isLoading);
+    quizContent.classList.toggle('hidden-screen', isLoading);
+  }
+
+  btnNext.addEventListener('click', async () => {
+    if (!state.currentSelection) return;
+    const q = currentQuestion();
+
+    state.history.push({ question: q.text, answer: state.currentSelection.text });
+
+    if (state.mode === 'demo') {
+      applyDemoAnswer(q, state.currentSelection);
+
+      if (state.currentIndex === 0) {
+        // branch just chosen -- build full sequence
+        const branchQs = BRANCH_QUESTIONS[state.branch];
+        state.sequence = [
+          Q_BRANCH_SELECT,
+          branchQs[0], branchQs[1], SHARED_ENV, branchQs[2], SHARED_VALUES, CLOSING_SCALE
+        ];
+      }
+
+      state.currentIndex++;
+
+      if (state.currentIndex >= state.sequence.length) {
+        await finishDemoWithDelay();
+      } else {
+        setLoading(true);
+        await delay(450 + Math.random() * 350);
+        setLoading(false);
+        renderQuestion();
+      }
+    } else {
+      setLoading(true, pickThinkingLine());
+      try {
+        const res = await callAI(state.history);
+        handleAIResponse(res);
+      } catch (err) {
+        handleAIError(err);
+      }
+    }
+  });
+
+  function pickThinkingLine() {
+    const lines = ['Leyendo tu respuesta...', 'Ajustando la siguiente pregunta...', 'Casi listo...'];
+    return lines[Math.floor(Math.random() * lines.length)];
+  }
+
+  function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function applyDemoAnswer(q, selection) {
+    if (q.type === 'mcq') {
+      const opt = q.options[selection.optionIndex];
+      if (opt.branch) state.branch = opt.branch;
+      if (opt.traits) {
+        Object.entries(opt.traits).forEach(([t, v]) => { state.traitVector[t] += v; });
+      }
+    } else if (q.type === 'scale') {
+      const contrib = q.weight(selection.value);
+      Object.entries(contrib).forEach(([t, v]) => { state.traitVector[t] += v; });
+    }
+  }
+
+  async function finishDemoWithDelay() {
+    setLoading(true, 'Calculando tus mejores coincidencias...');
+    await delay(700);
+    computeAndShowDemoResults();
+  }
+
+  /* ===================== DEMO RESULT COMPUTATION ===================== */
+
+  function dot(u, c) { return TRAITS.reduce((s, t) => s + (u[t] || 0) * (c[t] || 0), 0); }
+  function mag(v) { return Math.sqrt(TRAITS.reduce((s, t) => s + Math.pow(v[t] || 0, 2), 0)); }
+  function cosine(u, c) {
+    const m = mag(u) * mag(c);
+    return m === 0 ? 0 : dot(u, c) / m;
+  }
+
+  function topTraits(vector, n) {
+    return Object.entries(vector).sort((a, b) => b[1] - a[1]).slice(0, n).map(e => e[0]);
+  }
+
+  function getArchetypeTitle(vector) {
+    const [t1, t2] = topTraits(vector, 2);
+    const key1 = [t1, t2].sort().join(',');
+    if (archetypeNames[key1]) return archetypeNames[key1];
+    const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+    return `Perfil ${cap(t1)}-${cap(t2)}`;
+  }
+
+  function computeAndShowDemoResults() {
+    const userVector = state.traitVector;
+    const pool = CAREERS[state.branch];
+
+    const scored = pool.map((career, idx) => {
+      const sim = cosine(userVector, career.vector);
+      let pct = Math.round(58 + sim * 40 - idx * 0.6);
+      pct = Math.max(55, Math.min(97, pct));
+      const [ct1, ct2] = topTraits(career.vector, 2);
+      const why = `Esta carrera conecta con ${traitLabels[ct1]} y ${traitLabels[ct2]}, dos rasgos que se notaron con fuerza en tus respuestas.`;
+      return { name: career.name, match: pct, why, skills: career.skills, field: career.field };
+    }).sort((a, b) => b.match - a.match).slice(0, 5);
+
+    const [t1, t2] = topTraits(userVector, 2);
+    const profileTitle = getArchetypeTitle(userVector);
+    const profileSummary = `${state.name}, tus respuestas muestran una combinación notable de ${traitLabels[t1]} y ${traitLabels[t2]}. Este tipo de perfil suele disfrutar entornos donde puede aplicar exactamente eso -- y por eso estas carreras encajan bien contigo hoy. Recuerda: esto es un punto de partida para explorar, no una etiqueta definitiva.`;
+
+    renderResults({ profileTitle, profileSummary, careers: scored });
+  }
+
+  /* ===================== AI (API MODE) ===================== */
+
+  function buildAIPrompt(history) {
+    return `Eres un consejero vocacional empático, optimista y directo para estudiantes de bachillerato a punto de graduarse. Respondes ÚNICAMENTE con un JSON válido, sin texto adicional, sin explicaciones, sin markdown y sin backticks.
+
+Datos del estudiante:
+Nombre: ${state.name}
+Materias o hobbies favoritos: ${state.hobbies}
+
+Historial de preguntas y respuestas hasta ahora (formato pregunta/respuesta):
+${JSON.stringify(history)}
+
+Instrucciones:
+- Debes hacer un cuestionario adaptativo de entre 5 y 8 preguntas en total, generando cada pregunta con base en TODAS las respuestas anteriores.
+- Las preguntas deben indagar en: habilidades duras y blandas, intereses y hobbies, ambiente de trabajo preferido (oficina, campo, remoto, individual, equipo) y valores (ayudar a otros, estabilidad económica, creatividad, innovación).
+- Alterna entre preguntas de opción múltiple (type "mcq", con exactamente 4 opciones cortas) y preguntas de escala (type "scale", del 1 al 5, con leftLabel y rightLabel).
+- El historial ya tiene ${history.length} respuestas. Si ya tienes ${history.length} respuestas y consideras tener suficiente confianza (mínimo 5, máximo 8 preguntas en total), responde con "done": true y entrega el resultado final. Si no, responde con "done": false y la siguiente pregunta.
+- El resultado final debe incluir un perfil vocacional y entre 3 y 5 carreras recomendadas con porcentaje de compatibilidad, por qué encajan, habilidades clave y campo laboral.
+
+Responde EXCLUSIVAMENTE con este formato JSON exacto, sin ningún texto fuera del JSON:
+{
+  "done": false,
+  "progressPercent": 40,
+  "progressLabel": "texto corto describiendo el análisis en curso",
+  "question": {
+    "type": "mcq",
+    "text": "texto de la pregunta",
+    "options": ["opción 1", "opción 2", "opción 3", "opción 4"],
+    "leftLabel": "",
+    "rightLabel": ""
+  },
+  "result": null
+}
+
+O, cuando termines:
+{
+  "done": true,
+  "progressPercent": 100,
+  "progressLabel": "",
+  "question": null,
+  "result": {
+    "profileTitle": "nombre corto del perfil vocacional",
+    "profileSummary": "párrafo breve y cálido dirigido al estudiante por su nombre",
+    "careers": [
+      { "name": "nombre de la carrera", "match": 92, "why": "por qué encaja, basado en sus respuestas", "skills": ["habilidad 1", "habilidad 2", "habilidad 3"], "field": "campo laboral / salida profesional" }
+    ]
+  }
+}`;
+  }
+
+  async function callAI(history) {
+    const prompt = buildAIPrompt(history);
+
+    if (state.provider === 'anthropic') {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': state.apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (!resp.ok) throw new Error('Error de la API de Anthropic (' + resp.status + ')');
+      const data = await resp.json();
+      const text = (data.content || []).map(b => b.text || '').join('');
+      return parseAIJSON(text);
+    } else {
+      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.apiKey
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: prompt }],
+          response_format: { type: 'json_object' }
+        })
+      });
+      if (!resp.ok) throw new Error('Error de la API de OpenAI (' + resp.status + ')');
+      const data = await resp.json();
+      const text = data.choices?.[0]?.message?.content || '';
+      return parseAIJSON(text);
+    }
+  }
+
+  function parseAIJSON(text) {
+    let clean = text.trim().replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+    return JSON.parse(clean);
+  }
+
+  function handleAIResponse(res) {
+    setLoading(false);
+    if (res.done) {
+      renderResults(res.result);
+      return;
+    }
+    const q = res.question;
+    state.sequence[state.currentIndex] = {
+      type: q.type,
+      text: q.text,
+      leftLabel: q.leftLabel,
+      rightLabel: q.rightLabel,
+      options: (q.options || []).map(o => ({ text: o }))
+    };
+    progressLabel.textContent = res.progressLabel || 'Analizando tus respuestas...';
+    const pct = Math.max(5, Math.min(96, res.progressPercent || (state.currentIndex * 15)));
+    progressFill.style.width = pct + '%';
+    progressPercent.textContent = pct + '%';
+    renderQuestionFromAI(state.sequence[state.currentIndex]);
+  }
+
+  function renderQuestionFromAI(q) {
+    state.currentSelection = null;
+    btnNext.disabled = true;
+    questionIndexLabel.textContent = 'Pregunta ' + (state.currentIndex + 1);
+    questionText.textContent = q.text;
+    questionOptions.innerHTML = '';
+
+    if (q.type === 'mcq') {
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-btn w-full text-left border-2 border-gray-200 rounded-2xl p-4 flex items-start gap-3';
+        btn.innerHTML = `<span class="opt-letter shrink-0 w-7 h-7 rounded-full bg-primary-light text-primary font-semibold text-sm flex items-center justify-center">${letters[i]}</span><span class="pt-0.5">${opt.text}</span>`;
+        btn.addEventListener('click', () => {
+          questionOptions.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.currentSelection = { text: opt.text };
+          btnNext.disabled = false;
+        });
+        questionOptions.appendChild(btn);
+      });
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'flex flex-col gap-4 pt-2';
+      const dotsRow = document.createElement('div');
+      dotsRow.className = 'flex justify-between gap-2';
+      for (let v = 1; v <= 5; v++) {
+        const dotBtn = document.createElement('button');
+        dotBtn.type = 'button';
+        dotBtn.className = 'scale-dot flex-1 border-2 border-gray-200 rounded-2xl py-4 font-display text-lg font-semibold text-ink';
+        dotBtn.textContent = v;
+        dotBtn.addEventListener('click', () => {
+          dotsRow.querySelectorAll('.scale-dot').forEach(d => d.classList.remove('selected'));
+          dotBtn.classList.add('selected');
+          state.currentSelection = { text: String(v) };
+          btnNext.disabled = false;
+        });
+        dotsRow.appendChild(dotBtn);
+      }
+      const labelsRow = document.createElement('div');
+      labelsRow.className = 'flex justify-between text-xs text-inkmuted px-1';
+      labelsRow.innerHTML = `<span>${q.leftLabel || ''}</span><span>${q.rightLabel || ''}</span>`;
+      wrap.appendChild(dotsRow);
+      wrap.appendChild(labelsRow);
+      questionOptions.appendChild(wrap);
+    }
+    state.currentIndex++;
+    quizContent.classList.remove('question-enter');
+    void quizContent.offsetWidth;
+    quizContent.classList.add('question-enter');
+  }
+
+  function handleAIError(err) {
+    setLoading(false);
+    alert('Hubo un problema conectando con la IA: ' + err.message + '\n\nPuedes intentar de nuevo o volver a la pantalla inicial para usar el Modo Demo.');
+  }
+
+  /* ===================== RESULTS RENDERING ===================== */
+
+  function renderResults(result) {
+    resultProfileTitle.textContent = result.profileTitle;
+    resultProfileSummary.textContent = result.profileSummary;
+    resultCareers.innerHTML = '';
+
+    result.careers.forEach((career, i) => {
+      const card = document.createElement('div');
+      card.className = 'career-card bg-card rounded-3xl shadow-md p-6';
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <h3 class="font-display text-xl font-semibold text-ink">${career.name}</h3>
+          <div class="shrink-0 bg-primary-light text-primary font-semibold text-sm rounded-full px-3 py-1">${career.match}% afinidad</div>
+        </div>
+        <p class="text-inkmuted text-sm leading-relaxed mb-4">${career.why}</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${career.skills.map(s => `<span class="bg-paper text-ink text-xs font-medium rounded-full px-3 py-1.5">${s}</span>`).join('')}
+        </div>
+        <p class="text-xs text-inkmuted"><span class="font-semibold text-ink">Campo laboral: </span>${career.field}</p>
+      `;
+      resultCareers.appendChild(card);
+    });
+
+    showScreen(screenResults);
+  }
+
+  $('btn-print').addEventListener('click', () => window.print());
+  $('btn-restart').addEventListener('click', () => {
+    welcomeForm.reset();
+    apiConfig.classList.add('hidden-screen');
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('border-primary', 'bg-primary-light'));
+    document.querySelector('.mode-btn[data-mode="demo"]').classList.add('border-primary', 'bg-primary-light');
+    state.mode = 'demo';
+    showScreen(screenWelcome);
+  });
+
+})();
+</script>
+</body>
+</html>
